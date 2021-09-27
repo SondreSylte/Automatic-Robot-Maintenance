@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * a - d, toggles input
  * q exits
  */
+import java.util.Locale;
 import java.util.Scanner;
 
 import inf102.h21.management.Location;
@@ -88,6 +89,7 @@ public class Visualizer extends Frame{
 		Scanner sc = null;
 		try {
 			sc = new Scanner(new FileReader(input));
+			sc.useLocale(Locale.US);
 		}
 		catch (Exception e) {
 			System.exit(0);

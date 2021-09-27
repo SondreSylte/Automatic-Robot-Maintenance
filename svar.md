@@ -3,7 +3,7 @@
 Briefly describe your implementation in the different strategies. What was your plan and how did you execute it? If there were any problems and/or issues failed implementations please add a description.
 
 ## Task 1 - RandomStrategy
-*Enter description*
+
 
 ## Task 2 - ClosestStrategy
 *Enter description*

@@ -51,6 +51,7 @@ public abstract class AbstractStrategy implements IStrategy {
 			
 			if(assignRobots(selected, job)) 
 				removeJob(job);
+
 			else
 				break;
 		}
@@ -79,7 +80,7 @@ public abstract class AbstractStrategy implements IStrategy {
 	 * Select robots for the job. Should select robots most appropriate for the job.
 	 * 
 	 * @param job - The job to select robots for
-	 * @param available - The Robots to select among
+	 * @param /available - The Robots to select among
 	 * @return return list of selected robots if the job can be executed, else return empty list
 	 */
 	protected abstract List<Robot> selectRobots(Job job);
