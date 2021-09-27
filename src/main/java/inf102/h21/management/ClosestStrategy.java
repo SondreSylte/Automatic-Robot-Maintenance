@@ -5,10 +5,9 @@ import java.util.*;
 public class ClosestStrategy extends AbstractStrategy {
 
 
-
 	@Override
 	protected List<Robot> selectRobots(Job job) {
-		List<Robot> robotsReady = new LinkedList<>();
+		List<Robot> selectedRobots = new LinkedList<>();
 		int robotsNeeded = job.robotsNeeded;
 		int needed = 0;
 
@@ -18,7 +17,7 @@ public class ClosestStrategy extends AbstractStrategy {
 			Collections.sort(available,new RobotComp(loc));
 			for (Robot robot : available){
 				if (!robot.isBusy()){
-					robotsReady.add(robot);
+					selectedRobots.add(robot);
 					needed++;
 				}
 				if (robotsNeeded == needed){
@@ -26,7 +25,7 @@ public class ClosestStrategy extends AbstractStrategy {
 				}
 			}
 		}
-		return robotsReady;
+		return selectedRobots;
 	}
 
 

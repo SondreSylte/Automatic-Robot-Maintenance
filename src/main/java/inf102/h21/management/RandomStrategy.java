@@ -4,7 +4,7 @@ import java.util.*;
 
 public class RandomStrategy extends AbstractStrategy {
 
-	private Random rand = new Random();
+	private Random random = new Random();
 
 	/**
 	 *
@@ -13,17 +13,16 @@ public class RandomStrategy extends AbstractStrategy {
 	 */
 	@Override
 	protected List<Robot> selectRobots(Job job) {
-		List<Robot> robotsReady = new LinkedList<>();
-	    List<Robot> robotsAvailable = getAvailableRobots();
+		List<Robot> selectedRobots = new LinkedList<>();
 	    int robotsNeeded = job.robotsNeeded;
 
-		if (robotsNeeded <= robotsAvailable.size()){
+		if (robotsNeeded <= available.size()){
 			for (int i = 0; i < robotsNeeded;i++){
-				robotsReady.add(robotsAvailable.remove(rand.nextInt(robotsAvailable.size())));
+				selectedRobots.add(available.remove(random.nextInt(available.size())));
 			}
-			return robotsReady;
+			return selectedRobots;
 		}
-		return robotsAvailable;
+		return available;
 	}
 
 
