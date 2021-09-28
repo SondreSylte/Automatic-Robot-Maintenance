@@ -11,7 +11,7 @@ public class RobotComp implements Comparator<Robot> {
 
 
     @Override
-    public int compare(Robot o1, Robot o2) {
+    public int compare(Robot o1, Robot o2) { //O(1)
         if (o1.getLocation().dist(workLocation) < o2.getLocation().dist(workLocation)) return 1;
         else if (o1.getLocation().dist(workLocation) > o2.getLocation().dist(workLocation)) return -1;
 

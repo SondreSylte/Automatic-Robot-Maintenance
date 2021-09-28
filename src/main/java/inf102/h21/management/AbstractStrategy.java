@@ -40,13 +40,13 @@ public abstract class AbstractStrategy implements IStrategy {
 	/**
 	 * Finds jobs in backLog and assigns robots
 	 */
-	protected void doJobs() { //O(n*k)
+	protected void doJobs() { //R: O(k*n*log m) C: O(n log n)
 
 		while (!backLog.isEmpty()) {//O(1) er average. Worst case O(m)
 			Job job = selectJob(); //O(1)
-			List<Robot> selected = selectRobots(job); // O()
+			List<Robot> selected = selectRobots(job); // R: O(k*n) C: O(n log n)
 
-			if(assignRobots(selected, job)) //O((k^2)*n*logm)
+			if(assignRobots(selected, job)) //O(k*n*logm) + O(n) -> O(k*n*logm)
 				removeJob(job);//O(n)
 
 			else
@@ -134,7 +134,7 @@ public abstract class AbstractStrategy implements IStrategy {
 	 * @return list of all available robots
 	 */
 	public List<Robot> getAvailableRobots(){
-		return available;
+		return available; //O(n)
 	}
 
 }
