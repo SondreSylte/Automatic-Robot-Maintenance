@@ -6,15 +6,13 @@ public class BetterStrategy extends AbstractStrategy {
 
 	protected Location mean;
 
-	public BetterStrategy() {
+	public BetterStrategy() { //O(n)
 		Comparator<Job> comparator = new Comparator<Job>() {
 			@Override
-			public int compare(Job o1, Job o2) {
-				double dist1 = distanceToRobots(o1);
-				double dist2 = distanceToRobots(o2);
-				int o1Needed = o1.robotsNeeded;
-				int o2Needed = o2.robotsNeeded;
-				int result = Integer.compare(o1Needed, o2Needed);
+			public int compare(Job o1, Job o2) { //O(n)
+				double dist1 = distanceToRobots(o1); //n
+				double dist2 = distanceToRobots(o2); // + n
+				int result = Integer.compare(o1.robotsNeeded, o2.robotsNeeded);
 				if (result != 0) return result;
 				return Double.compare(dist1,dist2);
 				}
@@ -47,23 +45,11 @@ public class BetterStrategy extends AbstractStrategy {
 		return robotsReady;
 	}
 
-	@Override
-	public void moveFreeRobots(){
-		this.available.forEach((Robot robot) -> {
-			robot.move(this.findMeanLocation());
-		});
-	}
-
-	public Location findMeanLocation(){
-		return new Location(200,750);
-	}
-
-
 
 	private double distanceToRobots(Job job){
 		Location loc = job.location;
 		double mean = 0;
-		for (Robot robots : available) {
+		for (Robot robots : available) { //O(n)
 			double distance = robots.getLocation().dist(loc);
 			mean += distance;
 		}
