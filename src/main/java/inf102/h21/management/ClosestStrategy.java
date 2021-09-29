@@ -15,19 +15,19 @@ public class ClosestStrategy extends AbstractStrategy {
      */
 	@Override
 	protected List<Robot> selectRobots(Job job) { //O(n) + O(n log n) -> O(n log n)
-		List<Robot> selectedRobots = new LinkedList<>(); //O(1)
-		int robotsNeeded = job.robotsNeeded; //O(1)
-		int needed = 0; //O(1)
+		List<Robot> selectedRobots = new LinkedList<>();
+		int robotsNeeded = job.robotsNeeded;
+		int needed = 0;
 
 		if (robotsNeeded <= available.size()) {
-			Location loc = job.location; //O(1)
-			Collections.sort(available,new RobotComp(loc)); //O(n log n)
-			for (Robot robot : available){ //O(n) * O(1) -> O(n)
+			Location loc = job.location;
+			Collections.sort(available,new RobotComp(loc));
+			for (Robot robot : available){
 				if (!robot.isBusy()){
-					selectedRobots.add(robot); //O(1)
+					selectedRobots.add(robot);
 					needed++;
 				}
-				if (robotsNeeded == needed){ //O(1)
+				if (robotsNeeded == needed){
 					break;
 				}
 			}

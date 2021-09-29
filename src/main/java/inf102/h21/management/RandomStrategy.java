@@ -16,12 +16,12 @@ public class RandomStrategy extends AbstractStrategy {
 	 */
 	@Override
 	protected List<Robot> selectRobots(Job job) { // O(k*2n) -> O(k*n)
-		List<Robot> selectedRobots = new LinkedList<>(); //O(1)
-	    int robotsNeeded = job.robotsNeeded; //O(1)
+		List<Robot> selectedRobots = new LinkedList<>();
+	    int robotsNeeded = job.robotsNeeded;
 
-		if (robotsNeeded <= available.size()){ //O(1)
-			for (int i = 0; i < robotsNeeded;i++){ //O(k)
-				selectedRobots.add(available.remove(random.nextInt(available.size()))); // O(n) + O(n) -> O(2n)
+		if (robotsNeeded <= available.size()){
+			for (int i = 0; i < robotsNeeded;i++){
+				selectedRobots.add(available.remove(random.nextInt(available.size())));
 			}
 			return selectedRobots;
 		}

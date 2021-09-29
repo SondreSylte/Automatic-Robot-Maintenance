@@ -294,7 +294,7 @@ protected void doJobs() { // C: O(m) * (O(n log n) + O(k*n)) -> O(m*k*n) -> O(k*
     Does not use it. Same as I wrote in ClosestStrategy.
 * ``removeJob(Job job)``: O(n)
     Does not use it. Same as I wrote in ClosestStrategy.
-* ``assignRobots(List<Robot> selected, Job job)``: O(m*k*n)
+* ``assignRobots(List<Robot> selected, Job job)``: O(k*n)
     Does not use it. Same as I wrote in ClosestStrategy.
 * ``getAvailableRobots()``: O(1)
     Does not use it. Same as I wrote in ClosestStrategy.

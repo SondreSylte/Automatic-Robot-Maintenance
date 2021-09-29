@@ -8,9 +8,9 @@ public class BetterStrategy extends AbstractStrategy {
 	public BetterStrategy() { //O(n)
 		Comparator<Job> comparator = new Comparator<Job>() {
 			@Override
-			public int compare(Job o1, Job o2) { //O(n)
-				double dist1 = distanceToRobots(o1); //n
-				double dist2 = distanceToRobots(o2); // + n
+			public int compare(Job o1, Job o2) {
+				double dist1 = distanceToRobots(o1);
+				double dist2 = distanceToRobots(o2);
 				int result = Integer.compare(o1.robotsNeeded, o2.robotsNeeded);
 				if (result != 0) return result;
 				return Double.compare(dist1,dist2);
@@ -48,7 +48,7 @@ public class BetterStrategy extends AbstractStrategy {
 	private double distanceToRobots(Job job){ //O(n)
 		Location loc = job.location;
 		double mean = 0;
-		for (Robot robots : available) { //O(n)
+		for (Robot robots : available) {
 			double distance = robots.getLocation().dist(loc);
 			mean += distance;
 		}

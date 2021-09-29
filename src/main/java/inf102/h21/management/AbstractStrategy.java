@@ -15,26 +15,26 @@ public abstract class AbstractStrategy implements IStrategy {
 	protected Queue<Job> backLog;
 
 	public AbstractStrategy() {
-		backLog = new LinkedList<Job>(); //O(1)
+		backLog = new LinkedList<Job>();
 
 	}
 
 	@Override
-	public void registerRobots(List<Robot> robots) { //O(2n) -> O(n)
-		this.robots = new ArrayList<>(robots); //O(n)
-		available = new ArrayList<>(robots); //O(n)
+	public void registerRobots(List<Robot> robots) {
+		this.robots = new ArrayList<>(robots);
+		available = new ArrayList<>(robots);
 	}
 
 	@Override
-	public void registerNewJob(Job job) { //O(k*n)
-		backLog.add(job); //O(1)
-		doJobs();//O(k*n)
+	public void registerNewJob(Job job) {
+		backLog.add(job);
+		doJobs();
 	}
 
 	@Override
-	public void registerJobAsFulfilled(Job job, List<Robot> robots) { //O(k*n)
-		available.addAll(robots); ///O(n)
-		doJobs(); //O(k*n)
+	public void registerJobAsFulfilled(Job job, List<Robot> robots) {
+		available.addAll(robots);
+		doJobs();
 	}
 
 	/**
@@ -43,18 +43,18 @@ public abstract class AbstractStrategy implements IStrategy {
 	protected void doJobs() { //R: O(m)*(O(k*n)+O(k*n) -> O(m) * 2 *O(k*n) -> O(m*k*n) -> O(k*n)
 							// C: O(m) * (O(n log n) + O(k*n)) -> O(m*k*n) -> O(k*n)
 
-		while (!backLog.isEmpty()) {//O(1) is average. Worst case is O(m).I choose average case O(1).
-			Job job = selectJob(); //O(1)
-			List<Robot> selected = selectRobots(job); // R: O(k*n) C: O(n log n)
+		while (!backLog.isEmpty()) {
+			Job job = selectJob();
+			List<Robot> selected = selectRobots(job);
 
-			if(assignRobots(selected, job)) //O(k*n)
-				removeJob(job);//O(n)
+			if(assignRobots(selected, job))
+				removeJob(job);
 
 			else
 				break;
 		}
 		if(backLog.isEmpty())
-			moveFreeRobots(); //O(1)
+			moveFreeRobots();
 	}
 
 	/**
@@ -64,14 +64,14 @@ public abstract class AbstractStrategy implements IStrategy {
 	 * @return most appropriate job
 	 */
 	protected Job selectJob() {
-		return backLog.peek(); //O(1)
+		return backLog.peek();
 	}
 
-	protected void removeJob(Job job) { //O(n)
+	protected void removeJob(Job job) {
 		if(backLog.peek().equals(job))
 			backLog.poll();
 		else
-			backLog.remove(job); //O(n)
+			backLog.remove(job);
 	}
 
 	/**
@@ -99,28 +99,28 @@ public abstract class AbstractStrategy implements IStrategy {
 	 */
 	boolean assignRobots(List<Robot> selected, Job job) { // O(k) * O(k*n) + (O(k) * O(log m)) -> O(k * n)
 
-		if (selected == null) //O(1)
+		if (selected == null)
 			return false;
-		if (selected.isEmpty()) //O(1)
+		if (selected.isEmpty())
 			return false;
 
-		boolean canDo = selected.size() >= job.robotsNeeded; //O(1)
-		for(Robot r : selected) { //O(k)
-			if(r.isBusy()) { //O(1)
-				System.out.println("You selected a robot that was busy."); //O(1)
-				canDo = false; //O(1)
+		boolean canDo = selected.size() >= job.robotsNeeded;
+		for(Robot r : selected) {
+			if(r.isBusy()) {
+				System.out.println("You selected a robot that was busy.");
+				canDo = false;
 			}
 		}
-		if(canDo) { //O(1)
-			for(Robot robot : selected) { //O(k) * (O(log m) + O(n)) -> O(k*n)
-				robot.move(job);//O(log m)
-				available.remove(robot); //O(n)
+		if(canDo) {
+			for(Robot robot : selected) {
+				robot.move(job);
+				available.remove(robot);
 			}
 		}
 		else {
-			for(Robot r : selected) { // O(k) * O(log m)
+			for(Robot r : selected) {
 				if(!r.isBusy()) {
-					r.move(job.location); // O(log m)
+					r.move(job.location);
 				}
 			}
 		}
@@ -135,7 +135,7 @@ public abstract class AbstractStrategy implements IStrategy {
 	 * @return list of all available robots
 	 */
 	public List<Robot> getAvailableRobots(){
-		return available; //O(n)
+		return available;
 	}
 
 }
