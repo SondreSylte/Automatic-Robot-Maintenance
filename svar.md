@@ -12,6 +12,10 @@ To avoid getting the same random robot multiple times, I have to remove it from 
 
 One problem with this method is that by removing a robot from the list, it results in a "hole" in the list. 
 
+In order to make assignRobots faster, it could have been a solution to use LinkedList instead of List (ArrayList worst case) for available robots, and then remove
+the robots by index. If I had an iterator at the location that I want to remove, then the remove function would have constant time, O(1).
+The runtime would then be improved from O(k*n*log m) to O(k*log m).
+
 
 ## Task 2 - ClosestStrategy
 
@@ -43,40 +47,38 @@ For each method of the different strategies give a runtime analysis in Big-O not
   this.robots = new ArrayList<Robot>(robots); O(n)
   available = new ArrayList<>(robots); O(n)
   }
-* ``registerNewJob(Job job)``: O(k*n*log m)
+* ``registerNewJob(Job job)``: O(m*k*n)
   
   public void registerNewJob(Job job) {
   backLog.add(job); //O(1)
-  doJobs();//O(k*n*log m)
+  doJobs();//O(m*k*n)
     
-* ``registerJobAsFulfilled(Job job)``: O(k*n*log m)
+* ``registerJobAsFulfilled(Job job)``: O(m*k*n)
   
   public void registerJobAsFulfilled(Job job, List<Robot> robots) { 
   available.addAll(robots); ///O(n)
-  doJobs(); //O(k*n*log m)
+  doJobs(); //O(m*k*n)
 
 ### AbstractStrategy (if you use it)
-* ``doJobs()``: O(k*n*log m)
+* ``doJobs()``: O(m*k*n). If I choose O(1) in the while loop, the run time is O(k*n)
 
-  protected void doJobs() { //O(k*n*log m)
+protected void doJobs() { //R: O(m)*(O(k*n)+O(k*n) -> O(m) * 2 *O(k*n) -> O(m*k*n)  OR  O(k*n) if O(1) in while loop
+                        
 
-  	while (!backLog.isEmpty()) {//O(1) er average. Worst case O(m)
-  		Job job = selectJob(); //O(1)
-  		List<Robot> selected = selectRobots(job); // O(k*n)
+    while (!backLog.isEmpty()) {//O(1) is average. Worst case is O(m)
+        Job job = selectJob(); //O(1)
+        List<Robot> selected = selectRobots(job); // R: O(k*n) C: O(n log n)
 
-  		if(assignRobots(selected, job)) //O(k*n*logm) + O(n) -> O(k*n*logm)
-  			removeJob(job);//O(n)
+        if(assignRobots(selected, job)) //O(k*n)
+            removeJob(job);//O(n)
 
-  		else
-  			break;
-  	}
-  	if(backLog.isEmpty())
-  		moveFreeRobots(); //O(1)
-  }
+        else
+            break;
+    }
+    if(backLog.isEmpty())
+        moveFreeRobots(); //O(1)
+}
 
-The reason why doJobs() in this case is O(k*n*log m) is because it uses the selectRobot method from RandomStrategy, 
-which has the running time complexity of O(k*n). This is expected to change when the method is using the selectRobots method 
-from ClosestStrategy, because it has a different running time complexity.
 
 * ``selectJob()``: O(1)
   
@@ -86,16 +88,16 @@ from ClosestStrategy, because it has a different running time complexity.
   
 * ``removeJob(Job job)``: O(n)
   
-  protected void removeJob(Job job) { //O(n)
+  protected void removeJob(Job job) { //O(1) + O(n) -> O(n)
   if(backLog.peek().equals(job))
-  backLog.poll();
+  backLog.poll(); //O(1)
   else
   backLog.remove(job); //O(n)
   }
   
-* ``assignRobots(List<Robot> selected, Job job)``: O(k * log m) * n
-  
-  boolean assignRobots(List<Robot> selected, Job job) { // O(k) * O(k*n*log m) + (O(k) * O(log m)) -> O(k * log m) * n
+* ``assignRobots(List<Robot> selected, Job job)``: O(k*n)
+
+  boolean assignRobots(List<Robot> selected, Job job) { // O(k) * O(k*n) + (O(k) * O(log m)) -> O(k * n)
 
   	if (selected == null) //O(1)
   		return false;
@@ -110,7 +112,7 @@ from ClosestStrategy, because it has a different running time complexity.
   		}
   	}
   	if(canDo) { //O(1)
-  		for(Robot robot : selected) { //O(k)
+  		for(Robot robot : selected) { //O(k) * (O(log m) + O(n)) -> O(k*n)
   			robot.move(job);//O(log m)
   			available.remove(robot); //O(n)
   		}
@@ -151,23 +153,24 @@ the robots by index. If I had an iterator at the location that I want to remove,
 
 ## Task 2 - ClosestStrategy
 ### IStrategy
-* ``registerRobots(List<Robot> robots)``: O(?)
+* ``registerRobots(List<Robot> robots)``: O(n)
     Same as in RandomStrategy
-* ``registerNewJob(Job job)``: O(?)
+* ``registerNewJob(Job job)``: O(m*k*n)
     Same as in RandomStrategy
-* ``registerJobAsFulfilled(Job job)``: O(?)
+* ``registerJobAsFulfilled(Job job)``: O(m*k*n)
     Same as in RandomStrategy
 
 ### AbstractStrategy (if you use it)
-* ``doJobs()``: O(k*n*logm)
+* ``doJobs()``: O(m*k*n) if worst case. O(k*n) if not.
 
-  protected void doJobs() { //O(n log n)
+  protected void doJobs() { //R: O(m)*(O(k*n)+O(k*n) -> O(m) * 2 *O(k*n) -> O(m*k*n) -> O(k*n)
+  
 
-  	while (!backLog.isEmpty()) {//O(1) er average. Worst case O(m)
+  	while (!backLog.isEmpty()) {//O(1) is average. Worst case is O(m).I choose average case O(1).
   		Job job = selectJob(); //O(1)
-  		List<Robot> selected = selectRobots(job); // O(n log n)
+  		List<Robot> selected = selectRobots(job); // R: O(k*n) C: O(n log n)
 
-  		if(assignRobots(selected, job)) //O(k*n*logm) + O(n) -> O(k*n*logm)
+  		if(assignRobots(selected, job)) //O(k*n)
   			removeJob(job);//O(n)
 
   		else
@@ -187,12 +190,12 @@ the robots by index. If I had an iterator at the location that I want to remove,
   
   protected void removeJob(Job job) { //O(n)
   if(backLog.peek().equals(job))
-  backLog.poll();
+  backLog.poll(); O(1)
   else
   backLog.remove(job); //O(n)
   }
   
-* ``assignRobots(List<Robot> selected, Job job)``: O(k * log m) * n
+* ``assignRobots(List<Robot> selected, Job job)``: O(m*k*n)
   Same time complexity as in RandomStrategy.
   
 * ``getAvailableRobots()``: O(1)
@@ -228,23 +231,23 @@ the robots by index. If I had an iterator at the location that I want to remove,
 
 ## Task 3 - BetterStrategy
 ### IStrategy
-* ``registerRobots(List<Robot> robots)``: O(?)
+* ``registerRobots(List<Robot> robots)``: O(n)
     Same as in closestStrategy and randomStrategy
-* ``registerNewJob(Job job)``: O(?)
+* ``registerNewJob(Job job)``: O(m*k*n)
     Same as in closestStrategy and randomStrategy
-* ``registerJobAsFulfilled(Job job)``: O(?)
+* ``registerJobAsFulfilled(Job job)``: O(m*k*n)
     Same as in closestStrategy and randomStrategy 
 
 ### AbstractStrategy (if you use it)
-* ``doJobs()``: O(n log n) - same as in CloserStrategy since the selectRobots method is the same.
+* ``doJobs()``: O(m*k*n) if worst case. O(k*n) if not.
+  
+protected void doJobs() { // C: O(m) * (O(n log n) + O(k*n)) -> O(m*k*n) -> O(k*n)
 
-  protected void doJobs() { //O(n log n)
-
-  	while (!backLog.isEmpty()) {//O(1) er average. Worst case O(m)
+  	while (!backLog.isEmpty()) {//O(1) is average. Worst case is O(m).I choose average case O(1).
   		Job job = selectJob(); //O(1)
-  		List<Robot> selected = selectRobots(job); // O(n log n)
+  		List<Robot> selected = selectRobots(job); // R: O(k*n) C: O(n log n)
 
-  		if(assignRobots(selected, job)) //O(k*n*logm) + O(n) -> O(k*n*logm)
+  		if(assignRobots(selected, job)) //O(k*n)
   			removeJob(job);//O(n)
 
   		else
@@ -254,9 +257,10 @@ the robots by index. If I had an iterator at the location that I want to remove,
   		moveFreeRobots(); //O(1)
   }
 
+### Added method
 * ``BetterStrategy()``: O(n)
 
-  	public BetterStrategy() { //O(n)
+  	public BetterStrategy() { //O(2n) -> O(n)
   	Comparator<Job> comparator = new Comparator<Job>() {
   		@Override
   		public int compare(Job o1, Job o2) { //O(n)
@@ -271,6 +275,7 @@ the robots by index. If I had an iterator at the location that I want to remove,
   	super.backLog = new PriorityQueue<>(comparator);
   }
 
+###Added method
 * ``distanceToRobots(Job job)``: O(n)
 
   private double distanceToRobots(Job job){ //O(n)
@@ -285,13 +290,13 @@ the robots by index. If I had an iterator at the location that I want to remove,
   	return mean;
   }
 
-* ``selectJob()``: O(?)
+* ``selectJob()``: O(1)
     Does not use it. Same as I wrote in ClosestStrategy.
-* ``removeJob(Job job)``: O(?)
+* ``removeJob(Job job)``: O(n)
     Does not use it. Same as I wrote in ClosestStrategy.
-* ``assignRobots(List<Robot> selected, Job job)``: O(?)
+* ``assignRobots(List<Robot> selected, Job job)``: O(m*k*n)
     Does not use it. Same as I wrote in ClosestStrategy.
-* ``getAvailableRobots()``: O(?)
+* ``getAvailableRobots()``: O(1)
     Does not use it. Same as I wrote in ClosestStrategy.
 
 ### BetterStrategy
@@ -320,7 +325,7 @@ the robots by index. If I had an iterator at the location that I want to remove,
   
 ### Added class
 
-public class RobotComp implements Comparator<Robot> {
+public class RobotComp implements Comparator<Robot> {  
 private final Location workLocation;
 
     public RobotComp(Location workLocation) {
