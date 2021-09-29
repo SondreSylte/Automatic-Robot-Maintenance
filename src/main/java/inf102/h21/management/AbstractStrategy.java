@@ -21,7 +21,7 @@ public abstract class AbstractStrategy implements IStrategy {
 
 	@Override
 	public void registerRobots(List<Robot> robots) { //O(2n) -> O(n)
-		this.robots = new ArrayList<Robot>(robots); //O(n)
+		this.robots = new ArrayList<>(robots); //O(n)
 		available = new ArrayList<>(robots); //O(n)
 	}
 

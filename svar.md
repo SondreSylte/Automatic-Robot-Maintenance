@@ -37,26 +37,26 @@ For each method of the different strategies give a runtime analysis in Big-O not
 **If you have implemented new methods not listed you must add these as well.**
 ## Task 1 - RandomStrategy
 ### IStrategy
-* ``registerRobots(List<Robot> robots)``: O(1)
+* ``registerRobots(List<Robot> robots)``: O(2n) -> O(n)
   
   public void registerRobots(List<Robot> robots) { O(1)
-  this.robots = new ArrayList<Robot>(robots); O(1)
-  available = new ArrayList<>(robots); O(1)
+  this.robots = new ArrayList<Robot>(robots); O(n)
+  available = new ArrayList<>(robots); O(n)
   }
-* ``registerNewJob(Job job)``: O(n*k)
+* ``registerNewJob(Job job)``: O(k*n*log m)
   
   public void registerNewJob(Job job) {
   backLog.add(job); //O(1)
-  doJobs();//O(n*k)
+  doJobs();//O(k*n*log m)
     
-* ``registerJobAsFulfilled(Job job)``: O(n*k)
+* ``registerJobAsFulfilled(Job job)``: O(k*n*log m)
   
-  public void registerJobAsFulfilled(Job job, List<Robot> robots) { //O(n*k)
+  public void registerJobAsFulfilled(Job job, List<Robot> robots) { 
   available.addAll(robots); ///O(n)
-  doJobs(); //O(n*k)
+  doJobs(); //O(k*n*log m)
 
 ### AbstractStrategy (if you use it)
-* ``doJobs()``: O(k*n*log m)    
+* ``doJobs()``: O(k*n*log m)
 
   protected void doJobs() { //O(k*n*log m)
 
@@ -73,7 +73,11 @@ For each method of the different strategies give a runtime analysis in Big-O not
   	if(backLog.isEmpty())
   		moveFreeRobots(); //O(1)
   }
-  
+
+The reason why doJobs() in this case is O(k*n*log m) is because it uses the selectRobot method from RandomStrategy, 
+which has the running time complexity of O(k*n). This is expected to change when the method is using the selectRobots method 
+from ClosestStrategy, because it has a different running time complexity.
+
 * ``selectJob()``: O(1)
   
   protected Job selectJob() {
@@ -120,7 +124,10 @@ For each method of the different strategies give a runtime analysis in Big-O not
   	}
   	return canDo;
   }
-  
+
+In order to make assignRobots faster, it could have been a solution to use LinkedList instead of ArrayList for available robots, and then remove
+the robots by index. If I had an iterator at the location that I want to remove, then the remove function would have constant time, O(1). 
+
 * ``getAvailableRobots()``: O(1)
   public List<Robot> getAvailableRobots(){
   return available; // O(1)
@@ -145,14 +152,14 @@ For each method of the different strategies give a runtime analysis in Big-O not
 ## Task 2 - ClosestStrategy
 ### IStrategy
 * ``registerRobots(List<Robot> robots)``: O(?)
-    * *Insert description of why the method has the given runtime*
+    Same as in RandomStrategy
 * ``registerNewJob(Job job)``: O(?)
-    * *Insert description of why the method has the given runtime*
+    Same as in RandomStrategy
 * ``registerJobAsFulfilled(Job job)``: O(?)
-    * *Insert description of why the method has the given runtime*
+    Same as in RandomStrategy
 
 ### AbstractStrategy (if you use it)
-* ``doJobs()``: O(n log n)
+* ``doJobs()``: O(k*n*logm)
 
   protected void doJobs() { //O(n log n)
 
@@ -195,9 +202,9 @@ For each method of the different strategies give a runtime analysis in Big-O not
   }
 
 ### ClosestStrategy
-* ``selectRobots(Job job, List<Robot> available)``: O(n^2) + O(n log n)
+* ``selectRobots(Job job, List<Robot> available)``: O(n) + O(n log n) -> O(n log n)
 
-  protected List<Robot> selectRobots(Job job) { //O(n^2) + O(n log n)
+  protected List<Robot> selectRobots(Job job) { //O(n log n)
   List<Robot> selectedRobots = new LinkedList<>(); //O(1)
   int robotsNeeded = job.robotsNeeded; //O(1)
   int needed = 0; //O(1)
@@ -205,9 +212,9 @@ For each method of the different strategies give a runtime analysis in Big-O not
   	if (robotsNeeded <= available.size()) {
   		Location loc = job.location; //O(1)
   		Collections.sort(available,new RobotComp(loc)); //O(n log n)
-  		for (Robot robot : available){ //O(n) * O(n) -> O(n^2)
+  		for (Robot robot : available){ //O(n) 
   			if (!robot.isBusy()){
-  				selectedRobots.add(robot); //O(n)
+  				selectedRobots.add(robot); //O(1)
   				needed++;
   			}
   			if (robotsNeeded == needed){ //O(1)
@@ -222,11 +229,11 @@ For each method of the different strategies give a runtime analysis in Big-O not
 ## Task 3 - BetterStrategy
 ### IStrategy
 * ``registerRobots(List<Robot> robots)``: O(?)
-    * *Insert description of why the method has the given runtime*
+    Same as in closestStrategy and randomStrategy
 * ``registerNewJob(Job job)``: O(?)
-    * *Insert description of why the method has the given runtime*
+    Same as in closestStrategy and randomStrategy
 * ``registerJobAsFulfilled(Job job)``: O(?)
-    * *Insert description of why the method has the given runtime*
+    Same as in closestStrategy and randomStrategy 
 
 ### AbstractStrategy (if you use it)
 * ``doJobs()``: O(n log n) - same as in CloserStrategy since the selectRobots method is the same.
@@ -298,7 +305,7 @@ For each method of the different strategies give a runtime analysis in Big-O not
   	if (robotsNeeded <= available.size()) {
   		Location loc = job.location; //O(1)
   		Collections.sort(available,new RobotComp(loc)); //O(n log n)
-  		for (Robot robot : available){ //O(n) * O(n) -> O(n^2)
+  		for (Robot robot : available){ //O(n) 
   			if (!robot.isBusy()){
   				selectedRobots.add(robot); //O(1)
   				needed++;

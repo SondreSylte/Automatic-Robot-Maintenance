@@ -4,7 +4,6 @@ import java.util.*;
 
 public class BetterStrategy extends AbstractStrategy {
 
-	protected Location mean;
 
 	public BetterStrategy() { //O(n)
 		Comparator<Job> comparator = new Comparator<Job>() {

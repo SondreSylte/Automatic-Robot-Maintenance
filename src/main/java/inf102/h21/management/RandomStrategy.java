@@ -7,9 +7,12 @@ public class RandomStrategy extends AbstractStrategy {
 	private Random random = new Random(); //O(1)
 
 	/**
-	 *
+	 * This method will return a list of random chosen robots that are available,
+	 * based on how many robots that are needed for the job.
+	 * The robots will be added to the selectedRobots for the job, and removed from the available list
+	 * at the same time.
 	 * @param job - The job to select robots for
-	 * @return
+	 * @return selectedRobots
 	 */
 	@Override
 	protected List<Robot> selectRobots(Job job) { // O(k*2n) -> O(k*n)
