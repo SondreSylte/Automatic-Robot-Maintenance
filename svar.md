@@ -3,8 +3,6 @@
 Briefly describe your implementation in the different strategies. What was your plan and how did you execute it? If there were any problems and/or issues failed implementations please add a description.
 
 
-heiq
-
 ## Task 1 - RandomStrategy
 My first plan was to assume that the given list already was random. Then I could have added the first, for instance 10 robots that I needed.
 This would get way better results. Instead I tried to implement something a little more "advanced", and assume that the given list is not random.
