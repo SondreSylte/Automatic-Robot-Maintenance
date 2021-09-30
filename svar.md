@@ -195,7 +195,7 @@ the robots by index. If I had an iterator at the location that I want to remove,
   backLog.remove(job); //O(n)
   }
   
-* ``assignRobots(List<Robot> selected, Job job)``: O(m*k*n)
+* ``assignRobots(List<Robot> selected, Job job)``: O(k*n)
   Same time complexity as in RandomStrategy.
   
 * ``getAvailableRobots()``: O(1)
